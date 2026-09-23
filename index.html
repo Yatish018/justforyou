@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You, My Love ✨</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%3E<text y=%2226%22 font-size=%2224%22>💖</text></svg>">
+
+  <!-- Google Fonts: Playfair Display (Serif Elegance), Plus Jakarta Sans (Clean Modern), Caveat (Polaroid Handwriting) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            handwriting: ['"Caveat"', 'cursive'],
+          },
+          colors: {
+            rose: {
+              450: '#fb567b',
+              950: '#1a080f',
+            },
+            champagne: {
+              100: '#fef7ee',
+              200: '#fbeddc',
+              300: '#f7debf',
+              400: '#eac797',
+              500: '#dcab6d',
+            }
+          },
+          animation: {
+            'spin-slow': 'spin 14s linear infinite',
+            'float-slow': 'float 6s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+              '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Custom Romantic Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09050d;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #381b2a;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #fb567b;
+    }
+
+    /* 3D Flip Card Utilities */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+
+    /* Glassmorphism Classes */
+    .glass-panel {
+      background: rgba(22, 13, 29, 0.65);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 182, 193, 0.12);
+    }
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(251, 113, 133, 0.4);
+      box-shadow: 0 10px 30px -10px rgba(244, 63, 94, 0.3);
+    }
+
+    /* Washi Tape Effect */
+    .washi-tape {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 26px;
+      background: rgba(255, 241, 230, 0.45);
+      backdrop-filter: blur(4px);
+      border-left: 3px dashed rgba(255, 255, 255, 0.5);
+      border-right: 3px dashed rgba(255, 255, 255, 0.5);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body class="bg-[#0b0612] text-rose-100 font-sans antialiased selection:bg-rose-500 selection:text-white relative overflow-x-hidden min-h-screen">
+
+  <!-- AMBIENT BACKGROUND GLOWS -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="absolute -top-36 -left-36 w-[550px] h-[550px] bg-rose-900/25 rounded-full blur-[140px] animate-pulse-glow"></div>
+    <div class="absolute top-1/3 -right-48 w-[600px] h-[600px] bg-purple-900/20 rounded-full blur-[160px] animate-pulse-glow" style="animation-delay: 1.5s;"></div>
+    <div class="absolute -bottom-48 left-1/4 w-[650px] h-[650px] bg-pink-900/20 rounded-full blur-[150px]"></div>
+  </div>
+
+  <!-- FLOATING HEARTS CANVAS -->
+  <canvas id="hearts-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+
+  <!-- ========================================================================= -->
+  <!-- 1. MYSTERY PASSCODE GATE OVERLAY -->
+  <!-- ========================================================================= -->
+  <div id="lock-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0510]/95 backdrop-blur-2xl transition-all duration-1000">
+    <div class="w-full max-w-md mx-4 p-8 sm:p-10 rounded-3xl glass-panel text-center relative border border-rose-500/25 shadow-2xl shadow-rose-950/60">
+      
+      <!-- Pulsing Heart Icon -->
+      <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-tr from-rose-500/20 to-pink-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 text-3xl animate-bounce">
+        🔒
+      </div>
+
+      <p class="text-xs uppercase tracking-[0.3em] text-rose-300/80 mb-2 font-medium">Private Sanctuary</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-white mb-3 tracking-wide">For Her Eyes Only</h2>
+      <p class="text-rose-200/70 text-sm mb-6 leading-relaxed">
+        <!-- ✏️ CUSTOMIZATION: Passcode hint text -->
+        Enter our secret date (<span class="text-rose-300 font-semibold">DDMM</span>) or click below to unlock my heart.
+      </p>
+
+      <!-- Input Form -->
+      <form id="passcode-form" onsubmit="handlePasscodeSubmit(event)" class="space-y-4">
+        <div class="relative">
+          <input 
+            type="password" 
+            id="passcode-input" 
+            maxlength="8" 
+            placeholder="••••" 
+            class="w-full text-center text-2xl tracking-[0.4em] py-3.5 px-4 rounded-xl bg-black/40 border border-rose-500/30 text-rose-200 focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-500/20 transition-all placeholder:text-rose-900/50"
+            autocomplete="off"
+            autofocus
+          />
+        </div>
+
+        <p id="error-msg" class="text-xs text-rose-400 hidden font-medium transition-all">Oops! That's not quite it, my love. Try again ❤️</p>
+
+        <button 
+          type="submit" 
+          class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-medium text-sm tracking-wide shadow-lg shadow-rose-600/30 hover:shadow-rose-600/50 hover:brightness-110 active:scale-[0.98] transition-all duration-200"
+        >
+          Unlock Our Universe ✨
+        </button>
+      </form>
+
+      <!-- Instant Bypass for Ease -->
+      <button 
+        onclick="unlockSite()" 
+        class="mt-4 text-xs text-rose-300/60 hover:text-rose-300 transition-colors underline underline-offset-4"
+      >
+        I forgot the code (Let me in anyway ❤️)
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- FLOATING MUSIC PLAYER & SOUNDTRACK -->
+  <!-- ========================================================================= -->
+  <!-- ✏️ CUSTOMIZATION: Audio source link (uses a royalty-free romantic lofi melody) -->
+  <audio id="bg-audio" loop preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="fixed bottom-6 right-6 z-40">
+    <button 
+      id="music-toggle-btn"
+      onclick="toggleMusic()"
+      aria-label="Toggle background music"
+      class="group flex items-center gap-3 px-4 py-3 rounded-full glass-pill hover:bg-rose-500/20 border border-rose-400/30 text-rose-200 shadow-xl shadow-black/40 transition-all duration-300 active:scale-95"
+    >
+      <!-- Vinyl Icon with dynamic spin -->
+      <div id="vinyl-icon" class="relative w-8 h-8 rounded-full bg-gradient-to-tr from-gray-900 via-neutral-800 to-black border border-rose-400/40 flex items-center justify-center transition-transform">
+        <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+        <div class="absolute inset-0 rounded-full border border-white/10"></div>
+      </div>
+      
+      <div class="text-left pr-1 hidden sm:block">
+        <p class="text-[10px] tracking-wider uppercase text-rose-300/60 font-semibold">Our Song</p>
+        <p id="music-status-text" class="text-xs font-medium text-rose-100">Play Music ♫</p>
+      </div>
+
+      <!-- Live audio wave bars -->
+      <div id="audio-wave" class="flex items-end gap-1 h-4 pl-1 opacity-50 group-hover:opacity-100">
+        <span class="w-0.5 bg-rose-400 rounded-full h-2"></span>
+        <span class="w-0.5 bg-rose-400 rounded-full h-4"></span>
+        <span class="w-0.5 bg-rose-400 rounded-full h-1"></span>
+        <span class="w-0.5 bg-rose-400 rounded-full h-3"></span>
+      </div>
+    </button>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MAIN CONTENT CONTAINER (Hidden until unlocked) -->
+  <!-- ========================================================================= -->
+  <div id="main-content" class="relative z-10 opacity-0 transition-opacity duration-1000">
+
+    <!-- NAVIGATION BAR -->
+    <header class="w-full max-w-6xl mx-auto px-6 py-8 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🌹</span>
+        <!-- ✏️ CUSTOMIZATION: Monogram / Site title -->
+        <span class="font-serif text-lg font-semibold tracking-wider text-rose-200">A &amp; M</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-8 text-xs uppercase tracking-widest text-rose-200/70 font-medium">
+        <a href="#story" class="hover:text-rose-300 transition-colors">Our Story</a>
+        <a href="#memories" class="hover:text-rose-300 transition-colors">Memories</a>
+        <a href="#reasons" class="hover:text-rose-300 transition-colors">Vouchers</a>
+        <a href="#invitation" class="hover:text-rose-300 transition-colors">The Question</a>
+      </nav>
+      <div class="text-xs px-3.5 py-1.5 rounded-full glass-pill text-rose-300/90 border border-rose-500/20">
+        Always &amp; Forever ✨
+      </div>
+    </header>
+
+
+    <!-- ========================================================================= -->
+    <!-- 2. HERO SECTION -->
+    <!-- ========================================================================= -->
+    <section class="min-h-[85vh] flex flex-col justify-center items-center text-center px-6 pt-10 pb-20 relative">
+      
+      <!-- Romantic Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-pill border border-rose-400/20 text-xs sm:text-sm text-rose-300 font-medium mb-6 shadow-inner animate-float-slow">
+        <span>✨</span>
+        <!-- ✏️ CUSTOMIZATION: Partner's Name -->
+        <span>Dedicated to the love of my life, Sophia</span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-tight text-white max-w-4xl leading-[1.1] mb-6">
+        Every second with you is my <span class="italic font-normal bg-gradient-to-r from-rose-300 via-pink-300 to-champagne-300 bg-clip-text text-transparent">favorite story.</span>
+      </h1>
+
+      <p class="max-w-xl text-rose-200/75 text-sm sm:text-base md:text-lg font-light leading-relaxed mb-10">
+        A private digital garden built exclusively for you — to remember where we started, celebrate how far we've come, and ask you for what's next.
+      </p>
+
+      <!-- LIVE DAYS COUNTER -->
+      <div class="w-full max-w-2xl mx-auto p-6 sm:p-8 rounded-3xl glass-panel border border-rose-500/20 shadow-2xl mb-12">
+        <p class="text-[11px] uppercase tracking-[0.25em] text-rose-300/80 mb-4 font-semibold">
+          Time spent falling deeper in love with you
+        </p>
+        <div class="grid grid-cols-4 gap-2 sm:gap-4 text-center">
+          <div class="p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/5">
+            <span id="counter-days" class="block font-serif text-2xl sm:text-4xl lg:text-5xl font-bold text-white">0</span>
+            <span class="text-[10px] sm:text-xs uppercase tracking-wider text-rose-200/60 font-medium">Days</span>
+          </div>
+          <div class="p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/5">
+            <span id="counter-hours" class="block font-serif text-2xl sm:text-4xl lg:text-5xl font-bold text-rose-200">0</span>
+            <span class="text-[10px] sm:text-xs uppercase tracking-wider text-rose-200/60 font-medium">Hours</span>
+          </div>
+          <div class="p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/5">
+            <span id="counter-minutes" class="block font-serif text-2xl sm:text-4xl lg:text-5xl font-bold text-rose-200">0</span>
+            <span class="text-[10px] sm:text-xs uppercase tracking-wider text-rose-200/60 font-medium">Minutes</span>
+          </div>
+          <div class="p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/5">
+            <span id="counter-seconds" class="block font-serif text-2xl sm:text-4xl lg:text-5xl font-bold text-rose-400">0</span>
+            <span class="text-[10px] sm:text-xs uppercase tracking-wider text-rose-200/60 font-medium">Seconds</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Smooth Scroll Button -->
+      <a 
+        href="#story" 
+        class="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-rose-300/80 hover:text-white transition-colors"
+      >
+        <span>Relive Our Journey</span>
+        <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      </a>
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- 3. "OUR STORY" INTERACTIVE TIMELINE -->
+    <!-- ========================================================================= -->
+    <section id="story" class="max-w-5xl mx-auto px-6 py-24 relative">
+      
+      <div class="text-center max-w-2xl mx-auto mb-20">
+        <span class="text-xs uppercase tracking-[0.3em] text-rose-400 font-semibold">Our Milestones</span>
+        <h2 class="font-serif text-3xl sm:text-5xl text-white mt-2 mb-4">How We Got Here</h2>
+        <p class="text-rose-200/70 text-sm sm:text-base">Every quiet morning, late-night laugh, and shared glance that led to this moment.</p>
+      </div>
+
+      <!-- Vertical Timeline Central Line -->
+      <div class="relative wrap overflow-hidden">
+        <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-rose-500/10 via-rose-500/40 to-pink-500/10 -translate-x-1/2"></div>
+
+        <!-- TIMELINE ITEM 1 -->
+        <!-- ✏️ CUSTOMIZATION: Milestone 1 details -->
+        <div class="relative flex flex-col md:flex-row items-center mb-16 group">
+          <div class="flex md:w-1/2 md:justify-end w-full pl-12 md:pl-0 md:pr-10">
+            <div class="p-6 rounded-2xl glass-panel glass-card-hover border border-rose-500/20 text-left transition-all duration-300 w-full md:max-w-md">
+              <span class="text-xs font-semibold uppercase tracking-wider text-rose-400">October 14, 2023</span>
+              <h3 class="font-serif text-xl text-white mt-1 mb-2">The First Spark ☕</h3>
+              <p class="text-xs sm:text-sm text-rose-200/70 leading-relaxed">
+                The rainy afternoon we first grabbed coffee. What was supposed to be a polite 30-minute hello turned into three hours of talking about everything and nothing. I left knowing I had just met someone extraordinary.
+              </p>
+            </div>
+          </div>
+          <!-- Center Icon Node -->
+          <div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-[#12071a] border-2 border-rose-500 flex items-center justify-center text-xs text-rose-300 shadow-lg shadow-rose-600/40 group-hover:scale-110 transition-transform">
+            ✨
+          </div>
+          <div class="hidden md:block md:w-1/2"></div>
+        </div>
+
+        <!-- TIMELINE ITEM 2 -->
+        <!-- ✏️ CUSTOMIZATION: Milestone 2 details -->
+        <div class="relative flex flex-col md:flex-row items-center mb-16 group">
+          <div class="hidden md:block md:w-1/2"></div>
+          <!-- Center Icon Node -->
+          <div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-[#12071a] border-2 border-pink-400 flex items-center justify-center text-xs text-pink-300 shadow-lg shadow-pink-600/40 group-hover:scale-110 transition-transform">
+            🌙
+          </div>
+          <div class="flex md:w-1/2 md:justify-start w-full pl-12 md:pl-10">
+            <div class="p-6 rounded-2xl glass-panel glass-card-hover border border-rose-500/20 text-left transition-all duration-300 w-full md:max-w-md">
+              <span class="text-xs font-semibold uppercase tracking-wider text-pink-400">December 3, 2023</span>
+              <h3 class="font-serif text-xl text-white mt-1 mb-2">Under the City Lights 🌃</h3>
+              <p class="text-xs sm:text-sm text-rose-200/70 leading-relaxed">
+                Standing by the overlook with frozen fingers and warm cups. When you wrapped your hands into my coat pocket and laughed, all the noise in the city went silent.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIMELINE ITEM 3 -->
+        <!-- ✏️ CUSTOMIZATION: Milestone 3 details -->
+        <div class="relative flex flex-col md:flex-row items-center mb-16 group">
+          <div class="flex md:w-1/2 md:justify-end w-full pl-12 md:pl-0 md:pr-10">
+            <div class="p-6 rounded-2xl glass-panel glass-card-hover border border-rose-500/20 text-left transition-all duration-300 w-full md:max-w-md">
+              <span class="text-xs font-semibold uppercase tracking-wider text-rose-400">February 18, 2024</span>
+              <h3 class="font-serif text-xl text-white mt-1 mb-2">The Spontaneous Road Trip 🚗</h3>
+              <p class="text-xs sm:text-sm text-rose-200/70 leading-relaxed">
+                Windows rolled down, singing off-key to 2000s throwback hits, eating diner fries at midnight. That was the weekend I knew I never wanted to travel through life with anyone else.
+              </p>
+            </div>
+          </div>
+          <!-- Center Icon Node -->
+          <div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-[#12071a] border-2 border-rose-500 flex items-center justify-center text-xs text-rose-300 shadow-lg shadow-rose-600/40 group-hover:scale-110 transition-transform">
+            🎶
+          </div>
+          <div class="hidden md:block md:w-1/2"></div>
+        </div>
+
+        <!-- TIMELINE ITEM 4 -->
+        <!-- ✏️ CUSTOMIZATION: Milestone 4 details -->
+        <div class="relative flex flex-col md:flex-row items-center mb-16 group">
+          <div class="hidden md:block md:w-1/2"></div>
+          <!-- Center Icon Node -->
+          <div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-[#12071a] border-2 border-pink-400 flex items-center justify-center text-xs text-pink-300 shadow-lg shadow-pink-600/40 group-hover:scale-110 transition-transform">
+            🤍
+          </div>
+          <div class="flex md:w-1/2 md:justify-start w-full pl-12 md:pl-10">
+            <div class="p-6 rounded-2xl glass-panel glass-card-hover border border-rose-500/20 text-left transition-all duration-300 w-full md:max-w-md">
+              <span class="text-xs font-semibold uppercase tracking-wider text-pink-400">August 22, 2024</span>
+              <h3 class="font-serif text-xl text-white mt-1 mb-2">Our 3:00 AM Whispers 🕯️</h3>
+              <p class="text-xs sm:text-sm text-rose-200/70 leading-relaxed">
+                Sitting on the living room floor talking about our wildest childhood dreams and fears. It was the moment I realized you're not just my person — you're my safest place.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIMELINE ITEM 5 -->
+        <!-- ✏️ CUSTOMIZATION: Milestone 5 details -->
+        <div class="relative flex flex-col md:flex-row items-center group">
+          <div class="flex md:w-1/2 md:justify-end w-full pl-12 md:pl-0 md:pr-10">
+            <div class="p-6 rounded-2xl glass-panel glass-card-hover border border-rose-400/40 text-left transition-all duration-300 w-full md:max-w-md bg-rose-500/10">
+              <span class="text-xs font-semibold uppercase tracking-wider text-rose-300">Today &amp; Forever</span>
+              <h3 class="font-serif text-xl text-white mt-1 mb-2">The Unwritten Chapters 📖</h3>
+              <p class="text-xs sm:text-sm text-rose-200/80 leading-relaxed">
+                Every ordinary Tuesday with you feels like poetry. There are thousands of sunrises still waiting for us, and I want all of them with you.
+              </p>
+            </div>
+          </div>
+          <!-- Center Icon Node -->
+          <div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-rose-600 border-2 border-rose-300 flex items-center justify-center text-sm text-white shadow-xl shadow-rose-500/50 animate-pulse">
+            💖
+          </div>
+          <div class="hidden md:block md:w-1/2"></div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- 4. POLAROID MEMORY GALLERY WITH EXPANDABLE LIGHTBOX -->
+    <!-- ========================================================================= -->
+    <section id="memories" class="max-w-6xl mx-auto px-6 py-24 relative">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-xs uppercase tracking-[0.3em] text-rose-400 font-semibold">Captured Moments</span>
+        <h2 class="font-serif text-3xl sm:text-5xl text-white mt-2 mb-4">Our Polaroid Wall</h2>
+        <p class="text-rose-200/70 text-sm sm:text-base">Click any photo to enlarge and read the memory.</p>
+      </div>
+
+      <!-- POLAROID GRID -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-8 justify-items-center">
+
+        <!-- POLAROID 1 -->
+        <!-- ✏️ CUSTOMIZATION: Replace image URL & handwritten caption -->
+        <div 
+          onclick="openLightbox('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1200&auto=format&fit=crop', 'The golden sunset we watched until stars came out. 🌅')"
+          class="relative bg-[#faf7f2] p-4 pb-6 rounded-sm shadow-xl shadow-black/60 transform -rotate-2 hover:rotate-0 hover:scale-105 transition-all duration-300 cursor-pointer max-w-[290px] group"
+        >
+          <div class="washi-tape"></div>
+          <div class="w-[258px] h-[258px] overflow-hidden bg-neutral-200">
+            <img 
+              src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=800&auto=format&fit=crop" 
+              alt="Golden Sunset Memory"
+              class="w-full h-full object-cover group-hover:contrast-105 transition-all duration-500"
+              loading="lazy"
+            />
+          </div>
+          <p class="font-handwriting text-neutral-800 text-xl text-center mt-4 tracking-wide">
+            Golden sunset walks 🌅
+          </p>
+        </div>
+
+        <!-- POLAROID 2 -->
+        <!-- ✏️ CUSTOMIZATION: Replace image URL & handwritten caption -->
+        <div 
+          onclick="openLightbox('https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=1200&auto=format&fit=crop', 'Coffee mornings & sleepy smiles. ☕')"
+          class="relative bg-[#faf7f2] p-4 pb-6 rounded-sm shadow-xl shadow-black/60 transform rotate-3 hover:rotate-0 hover:scale-105 transition-all duration-300 cursor-pointer max-w-[290px] group"
+        >
+          <div class="washi-tape"></div>
+          <div class="w-[258px] h-[258px] overflow-hidden bg-neutral-200">
+            <img 
+              src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=800&auto=format&fit=crop" 
+              alt="Coffee Morning" 
+              class="w-full h-full object-cover group-hover:contrast-105 transition-all duration-500"
+              loading="lazy"
+            />
+          </div>
+          <p class="font-handwriting text-neutral-800 text-xl text-center mt-4 tracking-wide">
+            You, before your first coffee ☕
+          </p>
+        </div>
+
+        <!-- POLAROID 3 -->
+        <!-- ✏️ CUSTOMIZATION: Replace image URL & handwritten caption -->
+        <div 
+          onclick="openLightbox('https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=1200&auto=format&fit=crop', 'That ridiculous road trip detour we will never forget. 🗺️')"
+          class="relative bg-[#faf7f2] p-4 pb-6 rounded-sm shadow-xl shadow-black/60 transform -rotate-1 hover:rotate-0 hover:scale-105 transition-all duration-300 cursor-pointer max-w-[290px] group"
+        >
+          <div class="washi-tape"></div>
+          <div class="w-[258px] h-[258px] overflow-hidden bg-neutral-200">
+            <img 
+              src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800&auto=format&fit=crop" 
+              alt="Road Trip Detour" 
+              class="w-full h-full object-cover group-hover:contrast-105 transition-all duration-500"
+              loading="lazy"
+            />
+          </div>
+          <p class="font-handwriting text-neutral-800 text-xl text-center mt-4 tracking-wide">
+            Getting beautifully lost 🗺️
+          </p>
+        </div>
+
+        <!-- POLAROID 4 -->
+        <!-- ✏️ CUSTOMIZATION: Replace image URL & handwritten caption -->
+        <div 
+          onclick="openLightbox('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1200&auto=format&fit=crop', 'Holding your hand is still my favorite thing in this world. 🤝')"
+          class="relative bg-[#faf7f2] p-4 pb-6 rounded-sm shadow-xl shadow-black/60 transform rotate-2 hover:rotate-0 hover:scale-105 transition-all duration-300 cursor-pointer max-w-[290px] group"
+        >
+          <div class="washi-tape"></div>
+          <div class="w-[258px] h-[258px] overflow-hidden bg-neutral-200">
+            <img 
+              src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=800&auto=format&fit=crop" 
+              alt="Holding Hands" 
+              class="w-full h-full object-cover group-hover:contrast-105 transition-all duration-500"
+              loading="lazy"
+            />
+          </div>
+          <p class="font-handwriting text-neutral-800 text-xl text-center mt-4 tracking-wide">
+            Hand in hand, anywhere 🤝
+          </p>
+        </div>
+
+        <!-- POLAROID 5 -->
+        <!-- ✏️ CUSTOMIZATION: Replace image URL & handwritten caption -->
+        <div 
+          onclick="openLightbox('https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1200&auto=format&fit=crop', 'Wrapped up in fairy lights & deep talks. ✨')"
+          class="relative bg-[#faf7f2] p-4 pb-6 rounded-sm shadow-xl shadow-black/60 transform -rotate-3 hover:rotate-0 hover:scale-105 transition-all duration-300 cursor-pointer max-w-[290px] group"
+        >
+          <div class="washi-tape"></div>
+          <div class="w-[258px] h-[258px] overflow-hidden bg-neutral-200">
+            <img 
+              src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800&auto=format&fit=crop" 
+              alt="Fairy Lights" 
+              class="w-full h-full object-cover group-hover:contrast-105 transition-all duration-500"
+              loading="lazy"
+            />
+          </div>
+          <p class="font-handwriting text-neutral-800 text-xl text-center mt-4 tracking-wide">
+            Under the warm lights ✨
+          </p>
+        </div>
+
+        <!-- POLAROID 6 -->
+        <!-- ✏️ CUSTOMIZATION: Replace image URL & handwritten caption -->
+        <div 
+          onclick="openLightbox('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1200&auto=format&fit=crop', 'Stargazing on the hood of the car till 4 AM. 🌌')"
+          class="relative bg-[#faf7f2] p-4 pb-6 rounded-sm shadow-xl shadow-black/60 transform rotate-1 hover:rotate-0 hover:scale-105 transition-all duration-300 cursor-pointer max-w-[290px] group"
+        >
+          <div class="washi-tape"></div>
+          <div class="w-[258px] h-[258px] overflow-hidden bg-neutral-200">
+            <img 
+              src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop" 
+              alt="Stargazing" 
+              class="w-full h-full object-cover group-hover:contrast-105 transition-all duration-500"
+              loading="lazy"
+            />
+          </div>
+          <p class="font-handwriting text-neutral-800 text-xl text-center mt-4 tracking-wide">
+            Midnight sky &amp; you 🌌
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- 5. "REASONS YOU'RE AMAZING" 3D FLIPPABLE LOVE VOUCHERS -->
+    <!-- ========================================================================= -->
+    <section id="reasons" class="max-w-6xl mx-auto px-6 py-24 relative">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-xs uppercase tracking-[0.3em] text-rose-400 font-semibold">Interactive Love Deck</span>
+        <h2 class="font-serif text-3xl sm:text-5xl text-white mt-2 mb-4">Click to Reveal Your Vouchers</h2>
+        <p class="text-rose-200/70 text-sm sm:text-base">
+          Flip each card to discover why you make my world spin — and claim a redeemable voucher that never expires.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- CARD 1 -->
+        <div class="perspective-1000 h-72 cursor-pointer" onclick="toggleFlip(this)">
+          <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700">
+            <!-- Front -->
+            <div class="absolute inset-0 backface-hidden rounded-2xl glass-panel p-6 flex flex-col justify-between border border-rose-500/20 hover:border-rose-400/50 transition-all shadow-xl">
+              <div>
+                <span class="text-xs font-semibold uppercase tracking-wider text-rose-400">Reason #01</span>
+                <h3 class="font-serif text-2xl text-white mt-2 mb-3">Your Radiant Smile</h3>
+                <p class="text-xs sm:text-sm text-rose-200/70 leading-relaxed">
+                  The way your eyes crinkle when you truly laugh. It never fails to instantly wash away whatever rough day I was having.
+                </p>
+              </div>
+              <p class="text-[11px] text-rose-300/60 uppercase tracking-widest font-semibold flex items-center gap-1">
+                <span>✦ Click to flip &amp; claim coupon</span>
+              </p>
+            </div>
+            <!-- Back (Voucher) -->
+            <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-rose-950/90 via-purple-950/90 to-[#1e0a1a] p-6 flex flex-col justify-between border border-rose-400/40 shadow-2xl">
+              <div>
+                <span class="inline-block px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 text-[10px] uppercase tracking-widest font-bold">Voucher No. 101</span>
+                <h4 class="font-serif text-xl text-white mt-2 mb-2">Breakfast in Bed &amp; Fresh Coffee 🥞</h4>
+                <p class="text-xs text-rose-200/80 leading-relaxed">
+                  Redeemable on any weekend of your choice. You sleep in as late as you want, and wake up to freshly brewed coffee and your favorites.
+                </p>
+              </div>
+              <div class="border-t border-rose-500/20 pt-3 flex justify-between items-center text-[10px] text-rose-300/70">
+                <span>Valid: Lifetime</span>
+                <span>No Expiration Date ❤️</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="perspective-1000 h-72 cursor-pointer" onclick="toggleFlip(this)">
+          <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700">
+            <!-- Front -->
+            <div class="absolute inset-0 backface-hidden rounded-2xl glass-panel p-6 flex flex-col justify-between border border-rose-500/20 hover:border-rose-400/50 transition-all shadow-xl">
+              <div>
+                <span class="text-xs font-semibold uppercase tracking-wider text-rose-400">Reason #02</span>
+                <h3 class="font-serif text-2xl text-white mt-2 mb-3">How You Listen</h3>
+                <p class="text-xs sm:text-sm text-rose-200/70 leading-relaxed">
+                  You remember the tiniest things I mention in passing. With you, I never have to hide who I am — I always feel completely heard.
+                </p>
+              </div>
+              <p class="text-[11px] text-rose-300/60 uppercase tracking-widest font-semibold flex items-center gap-1">
+                <span>✦ Click to flip &amp; claim coupon</span>
+              </p>
+            </div>
+            <!-- Back (Voucher) -->
+            <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-rose-950/90 via-purple-950/90 to-[#1e0a1a] p-6 flex flex-col justify-between border border-rose-400/40 shadow-2xl">
+              <div>
+                <span class="inline-block px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 text-[10px] uppercase tracking-widest font-bold">Voucher No. 102</span>
+                <h4 class="font-serif text-xl text-white mt-2 mb-2">Late-Night Stargazing Drive 🚗</h4>
+                <p class="text-xs text-rose-200/80 leading-relaxed">
+                  Valid for an impulsive 11 PM drive out to where the stars shine bright. We bring hot chocolate, cozy blankets, and your curated playlist.
+                </p>
+              </div>
+              <div class="border-t border-rose-500/20 pt-3 flex justify-between items-center text-[10px] text-rose-300/70">
+                <span>Valid: Whenever you need an escape</span>
+                <span>Unlimited miles 🌌</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="perspective-1000 h-72 cursor-pointer" onclick="toggleFlip(this)">
+          <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700">
+            <!-- Front -->
+            <div class="absolute inset-0 backface-hidden rounded-2xl glass-panel p-6 flex flex-col justify-between border border-rose-500/20 hover:border-rose-400/50 transition-all shadow-xl">
+              <div>
+                <span class="text-xs font-semibold uppercase tracking-wider text-rose-400">Reason #03</span>
+                <h3 class="font-serif text-2xl text-white mt-2 mb-3">Your Gentle Kindness</h3>
+                <p class="text-xs sm:text-sm text-rose-200/70 leading-relaxed">
+                  The empathy and tenderness you show to animals, strangers, and the people you love. Your golden heart inspires me daily.
+                </p>
+              </div>
+              <p class="text-[11px] text-rose-300/60 uppercase tracking-widest font-semibold flex items-center gap-1">
+                <span>✦ Click to flip &amp; claim coupon</span>
+              </p>
+            </div>
+            <!-- Back (Voucher) -->
+            <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-rose-950/90 via-purple-950/90 to-[#1e0a1a] p-6 flex flex-col justify-between border border-rose-400/40 shadow-2xl">
+              <div>
+                <span class="inline-block px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 text-[10px] uppercase tracking-widest font-bold">Voucher No. 103</span>
+                <h4 class="font-serif text-xl text-white mt-2 mb-2">Movie Marathon Czar 🎬</h4>
+                <p class="text-xs text-rose-200/80 leading-relaxed">
+                  You get total control of the remote for three consecutive movies. Zero complaints, infinite popcorn, and all the warm blankets.
+                </p>
+              </div>
+              <div class="border-t border-rose-500/20 pt-3 flex justify-between items-center text-[10px] text-rose-300/70">
+                <span>Guaranteed: No movie vetoes</span>
+                <span>Popcorn included 🍿</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4 -->
+        <div class="perspective-1000 h-72 cursor-pointer" onclick="toggleFlip(this)">
+          <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700">
+            <!-- Front -->
+            <div class="absolute inset-0 backface-hidden rounded-2xl glass-panel p-6 flex flex-col justify-between border border-rose-500/20 hover:border-rose-400/50 transition-all shadow-xl">
+              <div>
+                <span class="text-xs font-semibold uppercase tracking-wider text-rose-400">Reason #04</span>
+                <h3 class="font-serif text-2xl text-white mt-2 mb-3">Your Unmatched Warmth</h3>
+                <p class="text-xs sm:text-sm text-rose-200/70 leading-relaxed">
+                  No matter how cold the world feels outside, five minutes in your arms resets everything. You are home to me.
+                </p>
+              </div>
+              <p class="text-[11px] text-rose-300/60 uppercase tracking-widest font-semibold flex items-center gap-1">
+                <span>✦ Click to flip &amp; claim coupon</span>
+              </p>
+            </div>
+            <!-- Back (Voucher) -->
+            <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-rose-950/90 via-purple-950/90 to-[#1e0a1a] p-6 flex flex-col justify-between border border-rose-400/40 shadow-2xl">
+              <div>
+                <span class="inline-block px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 text-[10px] uppercase tracking-widest font-bold">Voucher No. 104</span>
+                <h4 class="font-serif text-xl text-white mt-2 mb-2">Unlimited Hugs on Demand 🫂</h4>
+                <p class="text-xs text-rose-200/80 leading-relaxed">
+                  Entitles you to immediate, unconditional warm bear hugs and head scratches whenever requested. Non-transferable!
+                </p>
+              </div>
+              <div class="border-t border-rose-500/20 pt-3 flex justify-between items-center text-[10px] text-rose-300/70">
+                <span>Availability: 24/7/365</span>
+                <span>Instant dispatch 🤗</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 5 -->
+        <div class="perspective-1000 h-72 cursor-pointer" onclick="toggleFlip(this)">
+          <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700">
+            <!-- Front -->
+            <div class="absolute inset-0 backface-hidden rounded-2xl glass-panel p-6 flex flex-col justify-between border border-rose-500/20 hover:border-rose-400/50 transition-all shadow-xl">
+              <div>
+                <span class="text-xs font-semibold uppercase tracking-wider text-rose-400">Reason #05</span>
+                <h3 class="font-serif text-2xl text-white mt-2 mb-3">Your Passion &amp; Grit</h3>
+                <p class="text-xs sm:text-sm text-rose-200/70 leading-relaxed">
+                  Watching you speak passionately about what you believe in is mesmerizing. Your fire, intelligence, and ambition make me so proud.
+                </p>
+              </div>
+              <p class="text-[11px] text-rose-300/60 uppercase tracking-widest font-semibold flex items-center gap-1">
+                <span>✦ Click to flip &amp; claim coupon</span>
+              </p>
+            </div>
+            <!-- Back (Voucher) -->
+            <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-rose-950/90 via-purple-950/90 to-[#1e0a1a] p-6 flex flex-col justify-between border border-rose-400/40 shadow-2xl">
+              <div>
+                <span class="inline-block px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 text-[10px] uppercase tracking-widest font-bold">Voucher No. 105</span>
+                <h4 class="font-serif text-xl text-white mt-2 mb-2">Candlelit Chef's Dinner 🍷</h4>
+                <p class="text-xs text-rose-200/80 leading-relaxed">
+                  A complete 3-course homemade dinner prepared entirely by me with candles, background jazz, and cleanup fully handled.
+                </p>
+              </div>
+              <div class="border-t border-rose-500/20 pt-3 flex justify-between items-center text-[10px] text-rose-300/70">
+                <span>Dishwashing: 100% on me</span>
+                <span>Dessert included 🍰</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 6 -->
+        <div class="perspective-1000 h-72 cursor-pointer" onclick="toggleFlip(this)">
+          <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700">
+            <!-- Front -->
+            <div class="absolute inset-0 backface-hidden rounded-2xl glass-panel p-6 flex flex-col justify-between border border-rose-500/20 hover:border-rose-400/50 transition-all shadow-xl">
+              <div>
+                <span class="text-xs font-semibold uppercase tracking-wider text-rose-400">Reason #06</span>
+                <h3 class="font-serif text-2xl text-white mt-2 mb-3">Just Being You</h3>
+                <p class="text-xs sm:text-sm text-rose-200/70 leading-relaxed">
+                  Every silly face, every dance in the kitchen, every sweet text. There has never been, nor will there ever be, anyone quite like you.
+                </p>
+              </div>
+              <p class="text-[11px] text-rose-300/60 uppercase tracking-widest font-semibold flex items-center gap-1">
+                <span>✦ Click to flip &amp; claim coupon</span>
+              </p>
+            </div>
+            <!-- Back (Voucher) -->
+            <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-rose-950/90 via-purple-950/90 to-[#1e0a1a] p-6 flex flex-col justify-between border border-rose-400/40 shadow-2xl">
+              <div>
+                <span class="inline-block px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 text-[10px] uppercase tracking-widest font-bold">Golden Wildcard</span>
+                <h4 class="font-serif text-xl text-white mt-2 mb-2">The "You're 100% Right" Pass 👑</h4>
+                <p class="text-xs text-rose-200/80 leading-relaxed">
+                  Present this card anytime during any friendly debate or decision. You instantly win, no questions asked!
+                </p>
+              </div>
+              <div class="border-t border-rose-500/20 pt-3 flex justify-between items-center text-[10px] text-rose-300/70">
+                <span>Validity: Irrevocable</span>
+                <span>Queen status confirmed 💖</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- 6. "THE DATE INVITATION" INTERACTIVE WIDGET (RUNAWAY BUTTON) -->
+    <!-- ========================================================================= -->
+    <section id="invitation" class="max-w-4xl mx-auto px-6 py-24 text-center relative">
+      
+      <div class="relative p-8 sm:p-14 rounded-3xl glass-panel border border-rose-500/30 shadow-2xl overflow-hidden min-h-[460px] flex flex-col justify-center items-center" id="invitation-container">
+        
+        <!-- Glowing aura backdrop -->
+        <div class="absolute w-80 h-80 bg-rose-500/15 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <span class="inline-block px-4 py-1.5 rounded-full bg-rose-500/20 text-rose-300 text-xs uppercase tracking-widest font-semibold mb-4 border border-rose-500/30">
+          One Very Important Question
+        </span>
+
+        <h2 class="font-serif text-3xl sm:text-5xl lg:text-6xl text-white mb-4 leading-tight">
+          Will you go on a date with me this weekend?
+        </h2>
+
+        <p class="text-rose-200/75 text-sm sm:text-base max-w-md mx-auto mb-10">
+          Good food, your favorite dessert, lots of laughs, and 100% undivided attention guaranteed.
+        </p>
+
+        <!-- ACTION BUTTONS AREA -->
+        <div class="relative w-full max-w-md h-24 flex items-center justify-center gap-6">
+          
+          <!-- BIG "YES" BUTTON -->
+          <button 
+            id="yes-btn"
+            onclick="handleYesClick()"
+            class="px-8 sm:px-10 py-4 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-semibold text-base sm:text-lg tracking-wide shadow-xl shadow-rose-600/40 hover:shadow-rose-600/60 hover:scale-110 active:scale-95 transition-all duration-200 z-10"
+          >
+            YES! Absolutely ❤️
+          </button>
+
+          <!-- PLAYFUL RUNAWAY "NO" BUTTON -->
+          <button 
+            id="runaway-btn"
+            class="px-6 py-3.5 rounded-full glass-pill border border-white/20 text-rose-200 text-sm font-medium transition-transform duration-150 z-20 select-none cursor-pointer"
+          >
+            No 😜
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- FOOTER -->
+    <!-- ========================================================================= -->
+    <footer class="text-center py-12 text-xs text-rose-300/60 border-t border-white/5 relative z-10">
+      <!-- ✏️ CUSTOMIZATION: Footer signature -->
+      <p>Crafted with every beat of my heart for Sophia • Forever &amp; Always</p>
+      <p class="mt-2 text-[10px] text-rose-400/40 tracking-widest uppercase">Designed Exclusively For You</p>
+    </footer>
+
+  </div><!-- END MAIN CONTENT -->
+
+
+  <!-- ========================================================================= -->
+  <!-- LIGHTBOX MODAL FOR POLAROIDS -->
+  <!-- ========================================================================= -->
+  <div 
+    id="lightbox" 
+    class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4 sm:p-8"
+    onclick="closeLightbox()"
+  >
+    <div 
+      class="relative max-w-xl w-full bg-[#faf7f2] p-4 sm:p-6 rounded-lg shadow-2xl transform scale-95 transition-transform duration-300"
+      onclick="event.stopPropagation()"
+    >
+      <button 
+        onclick="closeLightbox()"
+        class="absolute -top-12 right-0 sm:-right-4 text-white hover:text-rose-400 text-2xl font-light focus:outline-none"
+        aria-label="Close modal"
+      >
+        ✕ Close
+      </button>
+
+      <div class="w-full max-h-[65vh] overflow-hidden rounded bg-black/10 flex items-center justify-center">
+        <img id="lightbox-img" src="" alt="Enlarged Memory" class="w-full h-full object-contain max-h-[65vh]" />
+      </div>
+
+      <p id="lightbox-caption" class="font-handwriting text-neutral-800 text-2xl sm:text-3xl text-center mt-5 tracking-wide"></p>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- "IT'S A DATE!" CELEBRATION MODAL -->
+  <!-- ========================================================================= -->
+  <div 
+    id="success-modal" 
+    class="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg hidden opacity-0 transition-opacity duration-500 flex items-center justify-center p-4"
+  >
+    <div class="w-full max-w-lg p-8 sm:p-10 rounded-3xl glass-panel text-center border border-rose-400/40 shadow-2xl relative">
+      <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-4xl animate-bounce">
+        🎉
+      </div>
+
+      <h3 class="font-serif text-3xl sm:text-4xl text-white mb-3">It's an Official Date!</h3>
+      
+      <!-- ✏️ CUSTOMIZATION: Celebration date details -->
+      <p class="text-rose-200/80 text-sm sm:text-base leading-relaxed mb-8">
+        You've officially made me the happiest person in the room. Put on that cute outfit you love, be ready by 7:00 PM this weekend, and leave the rest to me! ❤️
+      </p>
+
+      <button 
+        onclick="closeSuccessModal()" 
+        class="px-8 py-3.5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white text-sm font-semibold tracking-wide shadow-lg shadow-rose-600/40 hover:brightness-110 active:scale-95 transition-all"
+      >
+        Can't wait! 🥰
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC -->
+  <!-- ========================================================================= -->
+  <script>
+    /* =======================================================================
+     * ✏️ CUSTOMIZATION CONFIGURATION
+     * Change your names, secret code, and relationship start date here!
+     * ======================================================================= */
+    const CONFIG = {
+      // Passcode (e.g. date you met, anniversary: "1410" for 14th October)
+      PASSCODE: "1410",
+
+      // Relationship start date (YYYY, MM-1, DD, HH, MM)
+      // Note: Months are 0-indexed in JS (0 = Jan, 9 = Oct, 11 = Dec)
+      ANNIVERSARY_DATE: new Date(2023, 9, 14, 15, 30, 0),
+
+      // Playful teasing messages when she hovers over the "No" button
+      RUNAWAY_TEXTS: [
+        "Nice try! 😜",
+        "Can't click this! 🏃‍♂️",
+        "Oops, too slow! 💨",
+        "Are you sure? 🤔",
+        "Not an option! 💕",
+        "Try the other button! 👉",
+        "Destiny says YES! ✨"
+      ]
+    };
+
+    /* =======================================================================
+     * 1. PASSCODE & UNLOCK LOGIC
+     * ======================================================================= */
+    function handlePasscodeSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById("passcode-input").value.trim();
+      const errorMsg = document.getElementById("error-msg");
+
+      if (input === CONFIG.PASSCODE || input.toLowerCase() === "love" || input === "1234") {
+        unlockSite();
+      } else {
+        errorMsg.classList.remove("hidden");
+        // Shake animation
+        const inputEl = document.getElementById("passcode-input");
+        inputEl.classList.add("ring-2", "ring-rose-500");
+        setTimeout(() => inputEl.classList.remove("ring-2", "ring-rose-500"), 1000);
+      }
+    }
+
+    function unlockSite() {
+      const lockScreen = document.getElementById("lock-screen");
+      const mainContent = document.getElementById("main-content");
+      
+      // Smooth fade & scale out
+      lockScreen.classList.add("opacity-0", "scale-105", "pointer-events-none");
+      
+      setTimeout(() => {
+        lockScreen.style.display = "none";
+        mainContent.classList.remove("opacity-0");
+        mainContent.classList.add("opacity-100");
+        
+        // Trigger gentle celebration confetti on entrance
+        fireGentleConfetti();
+
+        // Attempt music autoplay after user interaction
+        const audio = document.getElementById("bg-audio");
+        audio.play().then(() => {
+          updateMusicUI(true);
+        }).catch(() => {
+          // Autoplay policy fallback: user can click the floating disc
+          updateMusicUI(false);
+        });
+      }, 700);
+    }
+
+    /* =======================================================================
+     * 2. LIVE RELATIONSHIP COUNTER
+     * ======================================================================= */
+    function updateCounter() {
+      const now = new Date();
+      const diff = Math.max(0, now - CONFIG.ANNIVERSARY_DATE);
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("counter-days").textContent = days.toLocaleString();
+      document.getElementById("counter-hours").textContent = String(hours).padStart(2, '0');
+      document.getElementById("counter-minutes").textContent = String(minutes).padStart(2, '0');
+      document.getElementById("counter-seconds").textContent = String(seconds).padStart(2, '0');
+    }
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    /* =======================================================================
+     * 3. MUSIC PLAYER CONTROLS
+     * ======================================================================= */
+    let isPlaying = false;
+    const audio = document.getElementById("bg-audio");
+    const vinyl = document.getElementById("vinyl-icon");
+    const wave = document.getElementById("audio-wave");
+    const statusText = document.getElementById("music-status-text");
+
+    function toggleMusic() {
+      if (audio.paused) {
+        audio.play().then(() => {
+          updateMusicUI(true);
+        }).catch(err => {
+          console.warn("Audio play blocked:", err);
+        });
+      } else {
+        audio.pause();
+        updateMusicUI(false);
+      }
+    }
+
+    function updateMusicUI(playing) {
+      isPlaying = playing;
+      if (playing) {
+        vinyl.classList.add("animate-spin-slow");
+        wave.classList.remove("opacity-50");
+        wave.classList.add("opacity-100");
+        statusText.textContent = "Playing ♪";
+      } else {
+        vinyl.classList.remove("animate-spin-slow");
+        wave.classList.add("opacity-50");
+        wave.classList.remove("opacity-100");
+        statusText.textContent = "Paused ♫";
+      }
+    }
+
+    /* =======================================================================
+     * 4. 3D FLIP CARDS
+     * ======================================================================= */
+    function toggleFlip(cardEl) {
+      const inner = cardEl.querySelector(".card-inner");
+      inner.classList.toggle("rotate-y-180");
+    }
+
+    /* =======================================================================
+     * 5. POLAROID LIGHTBOX
+     * ======================================================================= */
+    function openLightbox(src, caption) {
+      const lightbox = document.getElementById("lightbox");
+      const img = document.getElementById("lightbox-img");
+      const cap = document.getElementById("lightbox-caption");
+
+      img.src = src;
+      cap.textContent = caption;
+
+      lightbox.classList.remove("hidden");
+      setTimeout(() => {
+        lightbox.classList.remove("opacity-0");
+        lightbox.querySelector("div").classList.remove("scale-95");
+        lightbox.querySelector("div").classList.add("scale-100");
+      }, 20);
+    }
+
+    function closeLightbox() {
+      const lightbox = document.getElementById("lightbox");
+      lightbox.classList.add("opacity-0");
+      lightbox.querySelector("div").classList.add("scale-95");
+      setTimeout(() => {
+        lightbox.classList.add("hidden");
+      }, 300);
+    }
+
+    // Close on Escape key
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeLightbox();
+        closeSuccessModal();
+      }
+    });
+
+    /* =======================================================================
+     * 6. RUNAWAY "NO" BUTTON (CANNOT BE CLICKED)
+     * ======================================================================= */
+    const runawayBtn = document.getElementById("runaway-btn");
+    const container = document.getElementById("invitation-container");
+    let textIndex = 0;
+
+    function teleportButton() {
+      const containerRect = container.getBoundingClientRect();
+      const btnRect = runawayBtn.getBoundingClientRect();
+
+      // Calculate maximum safe area inside the invitation card
+      const padding = 20;
+      const maxLeft = containerRect.width - btnRect.width - padding;
+      const maxTop = containerRect.height - btnRect.height - padding;
+
+      // Generate random coordinate within bounds
+      const randomLeft = Math.floor(Math.random() * (maxLeft - padding)) + padding;
+      const randomTop = Math.floor(Math.random() * (maxTop - padding)) + padding;
+
+      // Position absolutely relative to invitation container
+      runawayBtn.style.position = "absolute";
+      runawayBtn.style.left = `${randomLeft}px`;
+      runawayBtn.style.top = `${randomTop}px`;
+
+      // Cycle humorous runaway text
+      runawayBtn.textContent = CONFIG.RUNAWAY_TEXTS[textIndex % CONFIG.RUNAWAY_TEXTS.length];
+      textIndex++;
+    }
+
+    // Trigger flee on hover, touch, or click
+    runawayBtn.addEventListener("mouseover", teleportButton);
+    runawayBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      teleportButton();
+    });
+    runawayBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      teleportButton();
+    });
+
+    /* =======================================================================
+     * 7. "YES" DATE BUTTON & CONFETTI CELEBRATION
+     * ======================================================================= */
+    function handleYesClick() {
+      // 1. Massive colorful Confetti Explosion
+      const duration = 4.5 * 1000;
+      const end = Date.now() + duration;
+
+      const colors = ['#fb7185', '#f43f5e', '#e11d48', '#fda4af', '#fde047', '#ffffff'];
+
+      (function frame() {
+        confetti({
+          particleCount: 5,
+          angle: 60,
+          spread: 70,
+          origin: { x: 0 },
+          colors: colors
+        });
+        confetti({
+          particleCount: 5,
+          angle: 120,
+          spread: 70,
+          origin: { x: 1 },
+          colors: colors
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+
+      // Central burst
+      confetti({
+        particleCount: 80,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: colors
+      });
+
+      // 2. Open Success Modal
+      const modal = document.getElementById("success-modal");
+      modal.classList.remove("hidden");
+      setTimeout(() => {
+        modal.classList.remove("opacity-0");
+      }, 30);
+    }
+
+    function closeSuccessModal() {
+      const modal = document.getElementById("success-modal");
+      modal.classList.add("opacity-0");
+      setTimeout(() => {
+        modal.classList.add("hidden");
+      }, 500);
+    }
+
+    function fireGentleConfetti() {
+      confetti({
+        particleCount: 35,
+        spread: 60,
+        origin: { y: 0.7 },
+        colors: ['#fb7185', '#fda4af', '#ffffff']
+      });
+    }
+
+    /* =======================================================================
+     * 8. SUBTLE FLOATING HEARTS BACKGROUND CANVAS
+     * ======================================================================= */
+    const canvas = document.getElementById('hearts-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let hearts = [];
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class FloatingHeart {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + Math.random() * 50;
+        this.size = Math.random() * 10 + 6;
+        this.speedY = Math.random() * 0.7 + 0.3;
+        this.speedX = Math.sin(Math.random() * 4) * 0.4;
+        this.opacity = Math.random() * 0.35 + 0.1;
+        this.rotation = Math.random() * 360;
+        this.spinSpeed = (Math.random() - 0.5) * 0.8;
+      }
+      update() {
+        this.y -= this.speedY;
+        this.x += this.speedX;
+        this.rotation += this.spinSpeed;
+        if (this.y < -20 || this.x < -20 || this.x > canvas.width + 20) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.fillStyle = `rgba(251, 113, 133, ${this.opacity})`;
+        ctx.beginPath();
+        const topCurveHeight = this.size * 0.3;
+        ctx.moveTo(0, topCurveHeight);
+        // Bezier heart curve
+        ctx.bezierCurveTo(-this.size / 2, -topCurveHeight, -this.size, topCurveHeight, 0, this.size);
+        ctx.bezierCurveTo(this.size, topCurveHeight, this.size / 2, -topCurveHeight, 0, topCurveHeight);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Populate hearts
+    const heartCount = window.innerWidth < 640 ? 18 : 35;
+    for (let i = 0; i < heartCount; i++) {
+      const h = new FloatingHeart();
+      h.y = Math.random() * canvas.height; // Spread initially
+      hearts.push(h);
+    }
+
+    function animateHearts() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < hearts.length; i++) {
+        hearts[i].update();
+        hearts[i].draw();
+      }
+      requestAnimationFrame(animateHearts);
+    }
+    animateHearts();
+  </script>
+</body>
+</html>
